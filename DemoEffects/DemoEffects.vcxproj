@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)\Dependencies\SDL3-3.4.2\include\SDL3;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Dependencies\SDL3-3.4.2\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\SDL3-3.4.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
