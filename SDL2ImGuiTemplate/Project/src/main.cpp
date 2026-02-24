@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include <string.h>
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <iostream>
 #include <vector>
 //#include <glad/glad.h>
@@ -33,17 +34,28 @@ float msFrame = 1 / (FPS / 1000.0f);
 #define RIPPLE_STRENGTH 512
 
 Uint32* pixels = NULL;
+//std::vector<Uint32> pixelsBuffer(SCREEN_WIDTH* SCREEN_HEIGHT);
 Uint32* background = NULL;
 
+// strength buffers for ripple
 int* current = NULL;
 int* previous = NULL;
 
+Mix_Music* mySong;
+#define BPM_MUSIC 128
+#define MSEG_BPM (60000 / BPM_MUSIC)
+#define FLASH_MAX_TIME 300
+int flashtime;
+int MusicCurrentTime;
+int MusicCurrentTimeBeat;
+int MusicCurrentBeat;
+int MusicPreviousBeat;
 
 bool initSDL();
 void waitTime();
 
 void initEffect();
-void update();
+void distorsion();
 void render();
 
 void drop(int mx, int my);
@@ -104,7 +116,7 @@ int main(int argc, char* args[])
                     }
                 }
 				updateRipples();
-				update();
+				distorsion();
 				render();
 
                 //Update the surface
@@ -177,13 +189,25 @@ void initEffect()
                 SDL_MapRGB(screenSurface->format, color, color, color);
         }
     }
+
+    // init audio
+    /*Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+    Mix_Init(MIX_INIT_MP3);
+    mySong = Mix_LoadMUS("Project/resources/PhilCollins_InTheAirTonight.mp3");
+    if (!mySong) {
+        std::cout << "Error loading Music: " << Mix_GetError() << std::endl;
+        close();
+        exit(1);
+    }*/
 }
 
-void update()
+void distorsion()
 {
+    
     SDL_LockSurface(screenSurface);
     pixels = (Uint32*)screenSurface->pixels;
 
+    // iterate all pixels except borders
     for (int y = 1; y < SCREEN_HEIGHT - 1; y++) {
         for (int x = 1; x < SCREEN_WIDTH - 1; x++) {
 
@@ -203,6 +227,7 @@ void update()
             if (sy < 0) sy = 0;
             if (sy >= SCREEN_HEIGHT) sy = SCREEN_HEIGHT - 1;
 
+            //setting the pixel color from displaced coords from background
             pixels[i] = background[sy * SCREEN_WIDTH + sx];
         }
     }
@@ -222,6 +247,8 @@ void render()
 void drop(int mx, int my)
 {
     // navigates drop area
+
+    
     for (int y = -RIPPLE_RADIUS; y < RIPPLE_RADIUS; y++) {
         for (int x = -RIPPLE_RADIUS; x < RIPPLE_RADIUS; x++) {
 

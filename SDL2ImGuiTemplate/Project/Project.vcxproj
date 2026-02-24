@@ -163,7 +163,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ImGuiBuild.h" />
+    <ClInclude Include="src\SDL_mixer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
